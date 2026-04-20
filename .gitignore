@@ -1,0 +1,29 @@
+# Data — too large for GitHub
+data/splits/
+data/mind.tsv
+data/mind_updated.tsv
+data/*.txt
+data/*.tsv
+
+# Results — generated files
+results/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+.env
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PyKEEN checkpoints
+*.pt
+checkpoints/

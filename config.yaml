@@ -1,0 +1,85 @@
+# config.yaml
+# Central configuration for all experiments.
+# All hyperparameters are documented here for manuscript reporting (R1 #7).
+
+data:
+  mind_path: "data/mind.tsv"          # TSV: head, relation, tail
+  splits_dir: "data/splits"
+  n_splits: 5
+  train_ratio: 0.80
+  test_ratio:  0.10
+  valid_ratio: 0.10
+  random_seed: 42
+  drug_treats_disease_relation: "indication"  # relation name in MIND for drug->treats->disease
+
+kge:
+  # Shared training settings
+  num_epochs: 500
+  batch_size: 512
+  early_stopping_patience: 20
+  eval_batch_size: 64
+  device: "cuda"                       # or "cpu"
+
+  TransE:
+    embedding_dim: 256
+    scoring_fct_norm: 1
+    lr: 0.001
+    optimizer: "adam"
+    regularizer: "lp"
+    regularizer_weight: 1.0e-5
+
+  RotatE:
+    embedding_dim: 256
+    lr: 0.001
+    optimizer: "adam"
+    regularizer: "lp"
+    regularizer_weight: 1.0e-5
+
+  DistMult:
+    embedding_dim: 256
+    lr: 0.001
+    optimizer: "adam"
+    regularizer: "lp"
+    regularizer_weight: 1.0e-5
+
+  ComplEx:
+    embedding_dim: 256
+    lr: 0.001
+    optimizer: "adam"
+    regularizer: "lp"
+    regularizer_weight: 1.0e-5
+
+  Rephetio:
+    # Rephetio uses logistic regression over metapath features
+    # Features: degree-weighted path counts (DWPC) for each metapath
+    max_metapath_length: 4
+    regularization_C: 0.1             # logistic regression C parameter
+    n_jobs: 4
+
+cbr:
+  # CBR (Das et al. 2020 - simple CBR over knowledge bases)
+  k_neighbors: 100                    # number of nearest neighbor cases to retrieve
+  max_path_length: 3
+  cbr_repo: "https://github.com/rajarshd/CBR-SUBG"
+
+  # ProbCBR (Das et al. 2020 - probabilistic extension)
+  prob_cbr_repo: "https://github.com/rajarshd/Prob-CBR"
+  cluster_assignments: 10             # number of entity clusters
+
+ensemble:
+  # Optuna-based weight optimisation (replaces grid search per R1 #6)
+  use_optuna: true
+  optuna_n_trials: 200
+  optuna_metric: "mrr"               # optimise for MRR on validation set
+  optuna_direction: "maximize"
+  weight_constraint: "simplex"       # weights sum to 1, each in [0,1]
+
+  # Fallback grid search (kept for comparison, step size 0.1)
+  grid_step: 0.1
+
+evaluation:
+  metrics: ["mrr", "hits@1", "hits@3", "hits@10"]
+  # Statistical testing across splits (R1 #5)
+  stat_test: "wilcoxon"              # wilcoxon signed-rank on per-query RR
+  alpha: 0.05
+  report_mean_std: true
