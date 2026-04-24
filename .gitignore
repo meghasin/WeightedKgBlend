@@ -5,8 +5,9 @@ data/mind_updated.tsv
 data/*.txt
 data/*.tsv
 
-# Results — generated files
+# Results — generated files (large, excluded except tracking table)
 results/
+!results/results_table.md
 logs/
 
 # Python
