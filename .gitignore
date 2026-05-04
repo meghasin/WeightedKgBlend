@@ -1,13 +1,21 @@
 # Data — too large for GitHub
 data/splits/
+data/splits_updated/
 data/mind.tsv
 data/mind_updated.tsv
 data/*.txt
 data/*.tsv
+data/*.csv
+data/.DS_Store
 
-# Results — generated files (large, excluded except tracking table)
-results/
-!results/results_table.md
+# Generated prediction/model files — large, exclude all .tsv and .pkl
+*.tsv
+*.pkl
+
+# Results — keep markdown tracking files, exclude everything else
+results/*
+!results/*.md
+results_updated/
 logs/
 
 # Python

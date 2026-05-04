@@ -1,0 +1,105 @@
+# WeightedKgBlend — Results Tracking (Updated MIND)
+
+Splits built from `mind_updated.tsv` — 6,761 indication edges (+1,391 from DrugCentral), 676 test/valid per slice.
+
+## Methods
+- **Simple Ensemble**: weighted sum of TransE + RotatE + ProbCBR reciprocal ranks (Optuna, 200 trials)
+- **Path-Gated Re-ranking**: RotatE top-50 candidates re-ranked by ProbCBR path scores (Optuna, 300 trials)
+  - score = α × (1/RotatE_rank) + β × ProbCBR_path_score
+
+---
+
+## slice_0
+
+| Model           | Split | N   | MRR    | Hits@1 | Hits@3 | Hits@5 | Hits@10 |
+|-----------------|-------|-----|--------|--------|--------|--------|---------|
+| TransE          | valid | 667 | 0.0106 | 0.0015 | 0.0075 | 0.0135 | 0.0225  |
+| TransE          | test  | 668 | 0.0164 | 0.0030 | 0.0165 | 0.0225 | 0.0359  |
+| RotatE          | valid | 667 | 0.0436 | 0.0105 | 0.0360 | 0.0660 | 0.1049  |
+| RotatE          | test  | 668 | 0.0430 | 0.0105 | 0.0359 | 0.0584 | 0.0988  |
+| ProbCBR         | valid | 676 | 0.0122 | 0.0059 | 0.0104 | 0.0148 | 0.0237  |
+| ProbCBR         | test  | 676 | 0.0091 | 0.0000 | 0.0104 | 0.0133 | 0.0237  |
+| Simple Ensemble | valid | —   | —      | —      | —      | —      | —       |
+| Simple Ensemble | test  | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | valid | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | test  | —   | —      | —      | —      | —      | —       |
+
+---
+
+## slice_1
+
+| Model           | Split | N   | MRR    | Hits@1 | Hits@3 | Hits@5 | Hits@10 |
+|-----------------|-------|-----|--------|--------|--------|--------|---------|
+| TransE          | valid | 667 | 0.0171 | 0.0045 | 0.0135 | 0.0210 | 0.0300  |
+| TransE          | test  | 674 | 0.0155 | 0.0059 | 0.0104 | 0.0178 | 0.0297  |
+| RotatE          | valid | 674 | 0.0399 | 0.0089 | 0.0342 | 0.0564 | 0.1024  |
+| RotatE          | test  | 674 | 0.0410 | 0.0104 | 0.0401 | 0.0608 | 0.1024  |
+| ProbCBR         | valid | 676 | 0.0183 | 0.0089 | 0.0148 | 0.0222 | 0.0399  |
+| ProbCBR         | test  | 676 | 0.0255 | 0.0148 | 0.0251 | 0.0340 | 0.0473  |
+| Simple Ensemble | valid | —   | —      | —      | —      | —      | —       |
+| Simple Ensemble | test  | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | valid | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | test  | —   | —      | —      | —      | —      | —       |
+
+---
+
+## slice_2
+
+| Model           | Split | N   | MRR    | Hits@1 | Hits@3 | Hits@5 | Hits@10 |
+|-----------------|-------|-----|--------|--------|--------|--------|---------|
+| TransE          | valid | 673 | 0.0110 | 0.0015 | 0.0045 | 0.0059 | 0.0178  |
+| TransE          | test  | 671 | 0.0127 | 0.0030 | 0.0060 | 0.0119 | 0.0179  |
+| RotatE          | valid | 671 | 0.0554 | 0.0194 | 0.0477 | 0.0820 | 0.1460  |
+| RotatE          | test  | 671 | 0.0568 | 0.0179 | 0.0477 | 0.0864 | 0.1520  |
+| ProbCBR         | valid | 676 | 0.0119 | 0.0044 | 0.0118 | 0.0148 | 0.0266  |
+| ProbCBR         | test  | 676 | 0.0131 | 0.0044 | 0.0118 | 0.0192 | 0.0281  |
+| Simple Ensemble | valid | —   | —      | —      | —      | —      | —       |
+| Simple Ensemble | test  | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | valid | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | test  | —   | —      | —      | —      | —      | —       |
+
+---
+
+## slice_3
+
+| Model           | Split | N   | MRR    | Hits@1 | Hits@3 | Hits@5 | Hits@10 |
+|-----------------|-------|-----|--------|--------|--------|--------|---------|
+| TransE          | valid | 670 | 0.0171 | 0.0060 | 0.0134 | 0.0194 | 0.0299  |
+| TransE          | test  | 669 | 0.0201 | 0.0045 | 0.0149 | 0.0239 | 0.0419  |
+| RotatE          | valid | 669 | 0.0497 | 0.0164 | 0.0433 | 0.0643 | 0.1121  |
+| RotatE          | test  | 669 | 0.0512 | 0.0179 | 0.0448 | 0.0703 | 0.1106  |
+| ProbCBR         | valid | 676 | 0.0073 | 0.0015 | 0.0059 | 0.0089 | 0.0178  |
+| ProbCBR         | test  | 676 | 0.0088 | 0.0015 | 0.0089 | 0.0118 | 0.0222  |
+| Simple Ensemble | valid | —   | —      | —      | —      | —      | —       |
+| Simple Ensemble | test  | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | valid | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | test  | —   | —      | —      | —      | —      | —       |
+
+---
+
+## slice_4
+
+| Model           | Split | N   | MRR    | Hits@1 | Hits@3 | Hits@5 | Hits@10 |
+|-----------------|-------|-----|--------|--------|--------|--------|---------|
+| TransE          | valid | 671 | 0.0170 | 0.0060 | 0.0119 | 0.0194 | 0.0313  |
+| TransE          | test  | 663 | 0.0143 | 0.0015 | 0.0090 | 0.0196 | 0.0302  |
+| RotatE          | valid | 663 | 0.0373 | 0.0090 | 0.0332 | 0.0468 | 0.0814  |
+| RotatE          | test  | 663 | 0.0382 | 0.0106 | 0.0332 | 0.0483 | 0.0860  |
+| ProbCBR         | valid | 676 | 0.0052 | 0.0000 | 0.0030 | 0.0059 | 0.0148  |
+| ProbCBR         | test  | 676 | 0.0124 | 0.0044 | 0.0118 | 0.0207 | 0.0266  |
+| Simple Ensemble | valid | —   | —      | —      | —      | —      | —       |
+| Simple Ensemble | test  | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | valid | —   | —      | —      | —      | —      | —       |
+| Path-Gated      | test  | —   | —      | —      | —      | —      | —       |
+
+---
+
+## Summary (mean ± std across 5 slices, test set)
+
+| Model           | MRR             | Hits@1          | Hits@3          | Hits@5          | Hits@10         |
+|-----------------|-----------------|-----------------|-----------------|-----------------|-----------------|
+| TransE          | 0.0158 ± 0.0025 | 0.0036 ± 0.0015 | 0.0114 ± 0.0039 | 0.0191 ± 0.0042 | 0.0311 ± 0.0080 |
+| RotatE          | 0.0460 ± 0.0069 | 0.0135 ± 0.0036 | 0.0403 ± 0.0054 | 0.0648 ± 0.0129 | 0.1100 ± 0.0225 |
+| ProbCBR         | 0.0138 ± 0.0061 | 0.0050 ± 0.0052 | 0.0136 ± 0.0058 | 0.0198 ± 0.0079 | 0.0296 ± 0.0091 |
+| Simple Ensemble | —               | —               | —               | —               | —               |
+| Path-Gated      | —               | —               | —               | —               | —               |
