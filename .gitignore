@@ -12,9 +12,11 @@ data/.DS_Store
 *.tsv
 *.pkl
 
-# Results — keep markdown tracking files, exclude everything else
+# Results — keep markdown tracking files and figures (PDF only), exclude rest
 results/*
 !results/*.md
+!results/figures/
+results/figures/*.png
 results_updated/
 logs/
 

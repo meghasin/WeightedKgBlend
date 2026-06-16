@@ -1,0 +1,5 @@
+Baseline,Baseline MRR,Path-Gated MRR,Improvement,p-value,Significant (p<0.05)
+TransE,0.0158,0.0682,+331.4%,0.0312,Yes
+ProbCBR,0.0138,0.0682,+394.6%,0.0312,Yes
+RotatE,0.0460,0.0682,+48.0%,0.0312,Yes
+Simple Ensemble,0.0489,0.0682,+39.5%,0.0312,Yes

@@ -1,0 +1,139 @@
+\documentclass[tikz, border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, shapes.geometric}
+
+% ── Colour palette ──────────────────────────────────────────────────────────
+\definecolor{kgblue}    {HTML}{2C3E7A}   % KG / data nodes
+\definecolor{kgegreen}  {HTML}{27AE60}   % KGE model nodes
+\definecolor{cbrorange} {HTML}{E67E22}   % CBR / path nodes
+\definecolor{ensemblepurple}{HTML}{8E44AD} % ensemble / output nodes
+\definecolor{pathgold}  {HTML}{B7950B}   % Path-Gated nodes
+\definecolor{lightgray} {HTML}{F2F3F4}   % panel backgrounds
+\definecolor{arrowgray} {HTML}{7F8C8D}   % arrows
+
+\tikzset{
+  box/.style     = {rectangle, rounded corners=4pt, minimum width=2.4cm,
+                    minimum height=0.75cm, align=center, font=\small\bfseries,
+                    text=white, inner sep=6pt},
+  kgbox/.style   = [box, fill=kgblue],
+  kgebox/.style  = [box, fill=kgegreen],
+  cbrbox/.style  = [box, fill=cbrorange],
+  outbox/.style  = [box, fill=ensemblepurple],
+  pgbox/.style   = [box, fill=pathgold],
+  arrow/.style   = [-{Stealth[length=6pt]}, thick, color=arrowgray],
+  panellabel/.style = {font=\large\bfseries, color=black},
+}
+
+\begin{document}
+\begin{tikzpicture}[node distance=0.55cm and 1.1cm]
+
+% ════════════════════════════════════════════════════════════════════════════
+% PANEL (a) — Simple Ensemble
+% ════════════════════════════════════════════════════════════════════════════
+
+% Input
+\node[kgbox]  (kg_a)                          {MIND KG};
+
+% Models
+\node[kgebox] (transe)  [right=1.2cm of kg_a, yshift= 1.5cm]  {TransE};
+\node[kgebox] (rotate)  [right=1.2cm of kg_a]                  {RotatE};
+\node[cbrbox] (probcbr) [right=1.2cm of kg_a, yshift=-1.5cm]  {ProbCBR};
+
+% Reciprocal ranks
+\node[kgebox] (rr_t)  [right=1.0cm of transe]   {1/rank\textsubscript{T}};
+\node[kgebox] (rr_r)  [right=1.0cm of rotate]   {1/rank\textsubscript{R}};
+\node[cbrbox] (rr_c)  [right=1.0cm of probcbr]  {1/rank\textsubscript{C}};
+
+% Optuna
+\node[outbox] (optuna) [right=1.1cm of rr_r]
+              {Optuna\\[-2pt]\footnotesize(200 trials)};
+
+% Output
+\node[outbox] (out_a)  [right=1.1cm of optuna]
+              {Ranked\\[-2pt]disease list};
+
+% Arrows kg → models
+\draw[arrow] (kg_a) -- (transe);
+\draw[arrow] (kg_a) -- (rotate);
+\draw[arrow] (kg_a) -- (probcbr);
+
+% Arrows models → rr
+\draw[arrow] (transe)  -- node[above, font=\tiny, color=arrowgray]{reciprocal rank} (rr_t);
+\draw[arrow] (rotate)  -- node[above, font=\tiny, color=arrowgray]{reciprocal rank} (rr_r);
+\draw[arrow] (probcbr) -- node[above, font=\tiny, color=arrowgray]{reciprocal rank} (rr_c);
+
+% Arrows rr → optuna
+\draw[arrow] (rr_t) -- (optuna);
+\draw[arrow] (rr_r) -- (optuna);
+\draw[arrow] (rr_c) -- (optuna);
+
+% Arrow optuna → output
+\draw[arrow] (optuna) -- node[above, font=\tiny, color=arrowgray]{$\lambda_1,\lambda_2,\lambda_3$} (out_a);
+
+% Panel label
+\node[panellabel] at ([xshift=-0.3cm, yshift=0.3cm] kg_a.north west) {(a)};
+
+% Panel background
+\begin{scope}[on background layer]
+  \node[fill=lightgray, rounded corners=8pt, inner sep=12pt,
+        fit=(kg_a)(transe)(probcbr)(rr_t)(rr_c)(optuna)(out_a)] (panel_a) {};
+\end{scope}
+
+% Panel title
+\node[font=\normalsize\bfseries, color=kgblue, anchor=south]
+     at (panel_a.north) {\strut Simple Ensemble};
+
+% ════════════════════════════════════════════════════════════════════════════
+% PANEL (b) — Path-Gated Re-ranking
+% ════════════════════════════════════════════════════════════════════════════
+
+% Input
+\node[kgbox]  (kg_b)  [below=1.8cm of panel_a.south west, anchor=north west]
+              {MIND KG};
+
+% Stage 1
+\node[kgebox] (rot_b)   [right=1.2cm of kg_b]               {RotatE};
+\node[kgebox] (top50)   [right=1.1cm of rot_b]               {Top-50\\[-2pt]candidates};
+
+% Stage 2
+\node[cbrbox] (probcbr_b) [right=1.2cm of top50]             {ProbCBR\\[-2pt]path scoring};
+
+% Optuna b
+\node[pgbox]  (optuna_b)  [right=1.1cm of probcbr_b]
+              {Optuna\\[-2pt]\footnotesize(300 trials)};
+
+% Output
+\node[pgbox]  (out_b)  [right=1.1cm of optuna_b]
+              {Re-ranked list\\[-2pt]+ path};
+
+% Path example node
+\node[draw=pathgold, fill=pathgold!10, rounded corners=4pt,
+      text=black, font=\footnotesize, align=center, inner sep=6pt]
+     (pathex) [below=0.7cm of out_b]
+     {\textit{drug} $\xrightarrow{\text{inhibits}}$
+      \textit{gene} $\xrightarrow{\text{associated\_with}}$ \textit{disease}};
+
+% Arrows
+\draw[arrow] (kg_b)      -- (rot_b);
+\draw[arrow] (rot_b)     -- node[above, font=\tiny, color=arrowgray]{Stage 1} (top50);
+\draw[arrow] (top50)     -- node[above, font=\tiny, color=arrowgray]{Stage 2} (probcbr_b);
+\draw[arrow] (probcbr_b) -- node[above, font=\tiny, color=arrowgray]{$\alpha,\beta$} (optuna_b);
+\draw[arrow] (optuna_b)  -- (out_b);
+\draw[arrow] (out_b)     -- (pathex);
+
+% Panel label
+\node[panellabel] at ([xshift=-0.3cm, yshift=0.3cm] kg_b.north west) {(b)};
+
+% Panel background
+\begin{scope}[on background layer]
+  \node[fill=lightgray, rounded corners=8pt, inner sep=12pt,
+        fit=(kg_b)(rot_b)(top50)(probcbr_b)(optuna_b)(out_b)(pathex)] (panel_b) {};
+\end{scope}
+
+% Panel title
+\node[font=\normalsize\bfseries, color=pathgold, anchor=south]
+     at (panel_b.north) {\strut Path-Gated Re-ranking};
+
+\end{tikzpicture}
+\end{document}
